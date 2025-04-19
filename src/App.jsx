@@ -24,26 +24,32 @@ export const App = () => {
   const [active, setActive] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
-  const applySort = type => {
+  const getSortetGoods = (sortType, reversed) => {
     const sortedGoods = [...goodsFromServer];
 
-    if (type === SORT_BY_ALPHABETIC) {
+    if (sortType === SORT_BY_ALPHABETIC) {
       sortedGoods.sort((a, b) => a.localeCompare(b));
-    } else if (type === SORT_BY_LENGTH) {
+    } else if (sortType === SORT_BY_LENGTH) {
       sortedGoods.sort((a, b) => a.length - b.length);
     }
 
-    if (isReversed) {
+    if (reversed) {
       sortedGoods.reverse();
     }
 
-    setVisibleGoods(sortedGoods);
+    return sortedGoods;
+  };
+
+  const applySort = type => {
     setActive(type);
+    setVisibleGoods(getSortetGoods(type, isReversed));
   };
 
   const reverseBtn = () => {
-    setVisibleGoods(visibleGoods.toReversed());
-    setIsReversed(!isReversed);
+    const newReversed = !isReversed;
+
+    setIsReversed(newReversed);
+    setVisibleGoods(getSortetGoods(active, newReversed));
   };
 
   const resetBtn = () => {
